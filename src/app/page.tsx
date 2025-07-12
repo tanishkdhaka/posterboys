@@ -1,103 +1,228 @@
+"use client";
 import Image from "next/image";
+import { New_Rocker } from "next/font/google";
+import Category from "@/data/category";
+import Link from "next/link";
+import SizeDropdown from "@/components/dropdown";
+
+const newRocker = New_Rocker({
+  subsets: ["latin"],
+  weight: "400",
+});
+const trending=[
+  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
+  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
+  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
+  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
+  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
+  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
+  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
+  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
+  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
+  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
+  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
+  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
+]
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+    <div className="flex flex-col scrollbar-none w-full min-h-screen bg-[#FDF6F0] text-black   ">
+      {/* heroSection */}
+      <section className="relative w-full bg-white h-[60vh] overflow-hidden">
         <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
+          src="/heroImage.webp"
+          alt="Poster"
+          fill
+          className="object-cover brightness-60"
           priority
         />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        <div
+          className={`${newRocker.className} absolute z-[10]  inset-0 gap-4  flex flex-col items-center justify-center text-white text-4xl md:text-6xl font-bold`}
+        >
+          <h1>Your Walls,</h1>
+          <h1>Best Wingman.</h1>
+          <p className="md:text-2xl text-sm text-center">
+            We’ve got your wall covered — literally.
+          </p>
+          <button className="md:text-4xl text-sm bg-black px-6 py-2 rounded-2xl cursor-pointer">
+            Starts At Just ₹99/
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+      </section>
+
+      {/* Categories */}
+      <section className="pt-2 flex flex-col">
+        <div className="flex items-center justify-center">
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src={"/Collection.png"}
+            alt={""}
+            height={1080}
+            width={1024}
+            className="md:h-[94px] md:w-[330px] h-[75px] w-[251px]"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        </div>
+        <div className="flex md:gap-10 gap-2 overflow-x-scroll scrollbar-none scroll-smooth">
+          {Category.map((cat, id) => (
+            <Link
+              href={cat.slug}
+              key={id}
+              className="flex flex-col justify-center md:gap-2 gap-1 md:p-4 p-2  rounded-3xl"
+            >
+              <div className="relative w-[90px] h-[120px] md:w-[208px] md:h-[260px] rounded-3xl overflow-hidden">
+                <Image
+                  src={cat.image_url}
+                  alt={cat.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div></div>
+
+              <h2 className="text-sm md:text-lg pl-2 font-semibold">
+                {cat.name}
+              </h2>
+            </Link>
+          ))}
+          <div className="rounded-3xl w-full h-full  bg-black md:mt-3 mt-2 flex items-center justify-center">
+            <Link
+              href={"/collection"}
+              className="text-sm md:text-lg w-[90px] h-[120px] md:w-[208px] md:h-[260px]  font-semibold text-[#338ED1] flex items-center justify-center"
+            >
+              View All
+            </Link>
+          </div>
+        </div>
+       
+      </section>
+
+      {/* Trending Now */}
+      <section className="pt-2 flex flex-col">
+        <div className="flex items-center justify-center">
           <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+            src={"/TrendingNow.png"}
+            alt={""}
+            height={1080}
+            width={1024}
+            className="md:h-[85px] md:w-[350px] h-[55px] w-[240px]"
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        </div>
+        <div className="flex overflow-x-scroll scrollbar-none ">
+          {trending.map((item,id)=>(
+       
+            <div  key={id} className="flex flex-col items-center justify-between md:p-4 p-2 gap-2  mb-2">
+                <Link href={`/poster/${item.slug}`} className="flex flex-col items-center justify-between md:p-4 p-2 gap-2  mb-2">
+                <div className="relative w-[100px] h-[120px] md:w-[208px] md:h-[260px] rounded-3xl overflow-hidden">
+                  <Image
+                    src={item.image_url}
+                    alt={item.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <h2 className="md:text-sm text-[0.6rem] text-center pl-2 ">{item.name}</h2>
+                <h3 className="font-semibold md:text-md text-sm">From Rs{item.price}</h3>
+                
+              </Link>
+             <SizeDropdown options={[
+                { size: "A4 ", price: 199 },
+                { size: "A3", price: 299 },
+               
+              ]} />
+           
+            </div>
+          ))}
+        </div>
+        <Link className=" bg-black mx-auto flex items-center justify-center text-white py-2 md:text-2xl rounded-2xl px-4" href={""}>View All</Link> 
+
+      </section>
+
+      {/* best Selling */}
+      <section className="pt-2 flex flex-col">
+        <div className="flex items-center justify-center">
           <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+            src={"/Bestselling.png"}
+            alt={""}
+            height={1080}
+            width={1024}
+            className="md:h-[85px] md:w-[350px] h-[55px] w-[240px]"
           />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </div>
+        <div className="flex overflow-x-scroll scrollbar-none ">
+          {trending.map((item,id)=>(
+       
+            <div  key={id} className="flex flex-col items-center justify-between md:p-4 p-2 gap-2  mb-2">
+                <Link href={`/poster/${item.slug}`} className="flex flex-col items-center justify-between md:p-4 p-2 gap-2  mb-2">
+                <div className="relative w-[100px] h-[120px] md:w-[208px] md:h-[260px] rounded-3xl overflow-hidden">
+                  <Image
+                    src={item.image_url}
+                    alt={item.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <h2 className="md:text-sm text-[0.6rem] text-center pl-2 ">{item.name}</h2>
+                <h3 className="font-semibold md:text-md text-sm">From Rs{item.price}</h3>
+                
+              </Link>
+             <SizeDropdown options={[
+                { size: "A4 ", price: 199 },
+                { size: "A3", price: 299 },
+               
+              ]} />
+           
+            </div>
+          ))}
+        </div>
+          <Link href={"/"} className=" bg-black mx-auto flex items-center justify-center text-white py-2 md:text-2xl rounded-2xl px-4">View All</Link> 
+      </section>
+
+      {/* custom poster */}
+      <section className="pt-2 flex flex-col">
+      <div className="flex items-center justify-center">
+          <Image
+            src={"/Bestselling.png"}
+            alt={""}
+            height={1080}
+            width={1024}
+            className="md:h-[85px] md:w-[350px] h-[55px] w-[240px]"
+          />
+        </div>
+        <div className="flex md:px-5 py-2 relative items-center justify-center">
+  <Image
+    src="/CustomPoster.png"
+    alt=""
+    height={1080}
+    width={1024}
+    className="w-full md:h-[600px]"
+  />
+
+  <div className="absolute z-[10] inset-0 flex flex-col items-center justify-end pb-[10%] text-black">
+    <Link
+      href=""
+      className="md:text-4xl text-xs bg-black text-white px-6 py-2 rounded-2xl cursor-pointer"
+    >
+      Create Your Poster
+    </Link>
+  </div>
+</div>
+
+       
+      </section>
+
+      {/* Why Choose Us */}
+
+      <section className="pt-2 flex flex-col">
+        <div className="flex items-center justify-center">
+          <Image
+            src={"/WhyChooseUs.png"}
+            alt={""}
+            height={1080}
+            width={1024}
+            className="md:h-[75px] md:w-[600px] h-[55px] w-[240px]"
+          />
+        </div>
+      
+      </section>
     </div>
   );
 }
