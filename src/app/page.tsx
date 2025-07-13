@@ -51,7 +51,7 @@ export default function Home() {
       </section>
 
       {/* Categories */}
-      <section className="pt-2 flex flex-col">
+      <section className="pt-5 flex flex-col">
         <div className="flex items-center justify-center">
           <Image
             src={"/Collection.png"}
@@ -96,7 +96,7 @@ export default function Home() {
       </section>
 
       {/* Trending Now */}
-      <section className="pt-2 flex flex-col">
+      <section className="pt-5 flex flex-col">
         <div className="flex items-center justify-center">
           <Image
             src={"/TrendingNow.png"}
@@ -137,14 +137,14 @@ export default function Home() {
       </section>
 
       {/* best Selling */}
-      <section className="pt-2 flex flex-col">
+      <section className="pt-5 flex flex-col">
         <div className="flex items-center justify-center">
           <Image
             src={"/Bestselling.png"}
             alt={""}
             height={1080}
             width={1024}
-            className="md:h-[85px] md:w-[350px] h-[55px] w-[240px]"
+            className="md:h-[100px] md:w-[350px] h-[70px] w-[240px]"
           />
         </div>
         <div className="flex overflow-x-scroll scrollbar-none ">
@@ -177,7 +177,7 @@ export default function Home() {
       </section>
 
       {/* custom poster */}
-      <section className="pt-2 flex flex-col">
+      <section className="pt-5 flex flex-col">
       <div className="flex items-center justify-center">
           <Image
             src={"/Bestselling.png"}
@@ -211,15 +211,62 @@ export default function Home() {
 
       {/* Why Choose Us */}
 
-      <section className="pt-2 flex flex-col">
+      <section className="md:py-15 py-6 flex flex-col">
         <div className="flex items-center justify-center">
           <Image
             src={"/WhyChooseUs.png"}
             alt={""}
             height={1080}
             width={1024}
-            className="md:h-[75px] md:w-[600px] h-[55px] w-[240px]"
+            className="md:h-[75px] md:w-[600px] h-[30px] w-[240px]"
           />
+        </div>
+        <div className="grid md:grid-cols-4 py-10 grid-cols-2 md:gap-5 gap-4 px-5  max-w-screen-lg mx-auto">
+          <div className="flex items-center justify-center flex-col gap-1 md:gap-2">
+            <Image
+              src={"/whyChooseUs1.png"}
+              alt={""}
+              height={1080}
+              width={1024}
+              className="md:h-[60px] md:w-[60px] h-[40px] w-[40px]"
+            />
+            <h2 className="text-center text-xs md:text-lg font-semibold">Premium Print</h2>
+            <p className="text-center text-[0.6rem] md:text-sm"> Quality is out top priority. Each poster is meticulously crafted using premium materials</p>
+          </div>
+          <div className="flex items-center justify-center flex-col gap-1 md:gap-2">
+            <Image
+              src={"/whyChooseUs2.png"}
+              alt={""}
+              height={1080}
+              width={1024}
+              className="md:h-[60px] md:w-[60px] h-[40px] w-[40px]"
+            />
+            <h2 className="text-center text-xs md:text-lg font-semibold">Custom Creation</h2>
+            <p className="text-center text-[0.6rem] md:text-sm"> Upload your own images or designs and create personalized poster that rreflect your personality.</p>
+          </div>
+          <div className="flex items-center justify-center flex-col gap-1  md:gap-2">
+            <Image
+              src={"/whyChooseUs3.png"}
+              alt={""}
+              height={1080}
+              width={1024}
+              className="md:h-[60px] md:w-[60px] h-[40px] w-[40px]"
+            />
+            <h2 className="text-center text-xs md:text-lg font-semibold">Free Shippingt</h2>
+            <p className="text-center text-[0.6rem] md:text-sm"> Enjoy free delivery on prepaid orders- no shipping fees means more savings and convenience for you!</p>
+          </div>
+          <div className="flex items-center justify-center flex-col gap-1 md:gap-2">
+            <Image
+              src={"/whyChooseUs4.png"}
+              alt={""}
+              height={1080}
+              width={1024}
+              className="md:h-[60px] md:w-[60px] h-[40px] w-[40px]"
+            />
+            <h2 className="text-center text-xs md:text-lg font-semibold">Secure Packaging</h2>
+            <p className="text-center text-[0.6rem] md:text-sm"> We ship your posters flat or rolled in rigid, damage-proof packaging—so they arrive crisp, clean, and display-ready.</p>
+          </div>
+
         </div>
       
       </section>

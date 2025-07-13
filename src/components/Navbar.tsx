@@ -12,7 +12,7 @@ const monoton = Monoton({
 
 function Navbar() {
   return (
-    <div className=' w-full bg-white sticky text-black top-0 z-[99999]'>
+    <nav className=' w-full bg-white sticky text-black top-0 z-[99999]'>
        
         <div className=' flex items-center justify-between md:p-3 md:px-8 p-2 bg-white shadow-md'>
             <div className={`${monoton.className} text-[#338ED1] md:text-2xl  `}>POSTERBOYS</div>
@@ -32,7 +32,7 @@ function Navbar() {
                 <button className='cursor-pointer md:hidden '><Menu className='h-5 md:h-6' /></button>
             </div>
         </div>
-    </div>
+    </nav>
   )
 }
 
