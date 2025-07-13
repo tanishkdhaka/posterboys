@@ -189,7 +189,7 @@ export default function Home() {
         </div>
         <div className="flex md:px-5 py-2 relative items-center justify-center">
   <Image
-    src="/CustomPoster.png"
+    src="/customPoster.png"
     alt=""
     height={1080}
     width={1024}
