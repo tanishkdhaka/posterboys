@@ -15,11 +15,11 @@ function Navbar() {
     <nav className=' w-full bg-white sticky text-black top-0 z-[99999]'>
        
         <div className=' flex items-center justify-between md:p-3 md:px-8 p-2 bg-white shadow-md'>
-            <div className={`${monoton.className} text-[#338ED1] md:text-2xl  `}>POSTERBOYS</div>
+            <Link href={"/"} className={`${monoton.className} text-[#338ED1] md:text-2xl  `}>POSTERBOYS</Link>
 
             <div className='gap-12 md:flex hidden items-center justify-center '>
                 <Link href="/" className='text-sm  font-semibold '>Home</Link>
-                <Link href="/about" className=' text-sm font-semibold'>Collection</Link>
+                <Link href="/collections" className=' text-sm font-semibold'>Collections</Link>
                 <Link href="/about" className=' text-sm font-semibold'>Custom Poster</Link>
                 <Link href="/about" className=' text-sm font-semibold'>More</Link>
                 <Link href="/about" className=' text-sm font-semibold'>Review</Link>

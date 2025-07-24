@@ -3,28 +3,56 @@ import Image from "next/image";
 import { New_Rocker } from "next/font/google";
 import Category from "@/data/category";
 import Link from "next/link";
-import SizeDropdown from "@/components/dropdown";
+import { useEffect, useState } from "react";
+import Products from "@/data/Products";
+import { supabase } from "@/lib/supabaseClient";
+import FeaturedProducts from "@/components/FeaturedProducts";
 
 const newRocker = New_Rocker({
   subsets: ["latin"],
   weight: "400",
 });
-const trending=[
-  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
-  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
-  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
-  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
-  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
-  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
-  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
-  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
-  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
-  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
-  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
-  {name:"Charles Leclerc Scuderia Ferrari | Formula One | F1 POSTERS", image_url:"/poster.png" ,slug:"poster",price:"399"},
-]
 
 export default function Home() {
+  const [bestSelling, setBestSellingProducts] = useState<Products[]>([]);
+  const [newArrivals, setNewArrivals] = useState<Products[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    
+    const fetchData = async () => {
+      setLoading(true);
+      const { data: bestSellingData, error: bestSellingError } = await supabase
+        .from("posters")
+        .select("*")
+        .order("order_count", { ascending: false })
+        .limit(10);
+      if (bestSellingError) {
+        console.error("Error fetching bestSelling products:", bestSellingError);
+      } else {
+        setBestSellingProducts(bestSellingData);
+      }
+      const { data: newArrivalsData, error: newArriavalError } = await supabase
+        .from("posters")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(10);
+      if (newArriavalError) {
+        console.error("Error fetching new arrivals:", newArriavalError);
+      } else {
+        setNewArrivals(newArrivalsData);
+      }
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
+  if(loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="loader"></div>
+      </div>
+      
+    )
+  }
   return (
     <div className="flex flex-col scrollbar-none w-full min-h-screen bg-[#FDF6F0] text-black   ">
       {/* heroSection */}
@@ -64,7 +92,7 @@ export default function Home() {
         <div className="flex md:gap-10 gap-2 overflow-x-scroll scrollbar-none scroll-smooth">
           {Category.map((cat, id) => (
             <Link
-              href={cat.slug}
+              href={`/collections/${cat.slug}`}
               key={id}
               className="flex flex-col justify-center md:gap-2 gap-1 md:p-4 p-2  rounded-3xl"
             >
@@ -83,102 +111,32 @@ export default function Home() {
               </h2>
             </Link>
           ))}
-          <div className="rounded-3xl w-full h-full  bg-black md:mt-3 mt-2 flex items-center justify-center">
+          <div className="rounded-3xl md:w-[208px] w-[90px] h-full  bg-black md:mt-3 mt-2 flex items-center justify-center">
             <Link
-              href={"/collection"}
+              href={"/collections"}
               className="text-sm md:text-lg w-[90px] h-[120px] md:w-[208px] md:h-[260px]  font-semibold text-[#338ED1] flex items-center justify-center"
             >
               View All
             </Link>
           </div>
         </div>
-       
       </section>
 
       {/* Trending Now */}
-      <section className="pt-5 flex flex-col">
-        <div className="flex items-center justify-center">
-          <Image
-            src={"/TrendingNow.png"}
-            alt={""}
-            height={1080}
-            width={1024}
-            className="md:h-[85px] md:w-[350px] h-[55px] w-[240px]"
-          />
-        </div>
-        <div className="flex overflow-x-scroll scrollbar-none ">
-          {trending.map((item,id)=>(
-       
-            <div  key={id} className="flex flex-col items-center justify-between md:p-4 p-2 gap-2  mb-2">
-                <Link href={`/poster/${item.slug}`} className="flex flex-col items-center justify-between md:p-4 p-2 gap-2  mb-2">
-                <div className="relative w-[100px] h-[120px] md:w-[208px] md:h-[260px] rounded-3xl overflow-hidden">
-                  <Image
-                    src={item.image_url}
-                    alt={item.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <h2 className="md:text-sm text-[0.6rem] text-center pl-2 ">{item.name}</h2>
-                <h3 className="font-semibold md:text-md text-sm">From Rs{item.price}</h3>
-                
-              </Link>
-             <SizeDropdown options={[
-                { size: "A4 ", price: 199 },
-                { size: "A3", price: 299 },
-               
-              ]} />
-           
-            </div>
-          ))}
-        </div>
-        <Link className=" bg-black mx-auto flex items-center justify-center text-white py-2 md:text-2xl rounded-2xl px-4" href={""}>View All</Link> 
-
-      </section>
+      <FeaturedProducts
+        product={newArrivals}
+        section_image={"/TrendingNow.png"}
+      />
 
       {/* best Selling */}
-      <section className="pt-5 flex flex-col">
-        <div className="flex items-center justify-center">
-          <Image
-            src={"/Bestselling.png"}
-            alt={""}
-            height={1080}
-            width={1024}
-            className="md:h-[100px] md:w-[350px] h-[70px] w-[240px]"
-          />
-        </div>
-        <div className="flex overflow-x-scroll scrollbar-none ">
-          {trending.map((item,id)=>(
-       
-            <div  key={id} className="flex flex-col items-center justify-between md:p-4 p-2 gap-2  mb-2">
-                <Link href={`/poster/${item.slug}`} className="flex flex-col items-center justify-between md:p-4 p-2 gap-2  mb-2">
-                <div className="relative w-[100px] h-[120px] md:w-[208px] md:h-[260px] rounded-3xl overflow-hidden">
-                  <Image
-                    src={item.image_url}
-                    alt={item.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <h2 className="md:text-sm text-[0.6rem] text-center pl-2 ">{item.name}</h2>
-                <h3 className="font-semibold md:text-md text-sm">From Rs{item.price}</h3>
-                
-              </Link>
-             <SizeDropdown options={[
-                { size: "A4 ", price: 199 },
-                { size: "A3", price: 299 },
-               
-              ]} />
-           
-            </div>
-          ))}
-        </div>
-          <Link href={"/"} className=" bg-black mx-auto flex items-center justify-center text-white py-2 md:text-2xl rounded-2xl px-4">View All</Link> 
-      </section>
+      <FeaturedProducts
+        product={bestSelling}
+        section_image={"/Bestselling.png"}
+      />
 
       {/* custom poster */}
       <section className="pt-5 flex flex-col">
-      <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center">
           <Image
             src={"/Bestselling.png"}
             alt={""}
@@ -188,25 +146,23 @@ export default function Home() {
           />
         </div>
         <div className="flex md:px-5 py-2 relative items-center justify-center">
-  <Image
-    src="/CustomPoster.png"
-    alt=""
-    height={1080}
-    width={1024}
-    className="w-full md:h-[600px]"
-  />
+          <Image
+            src="/customPoster.png"
+            alt=""
+            height={1080}
+            width={1024}
+            className="w-full md:h-[600px]"
+          />
 
-  <div className="absolute z-[10] inset-0 flex flex-col items-center justify-end pb-[10%] text-black">
-    <Link
-      href=""
-      className="md:text-4xl text-xs bg-black text-white px-6 py-2 rounded-2xl cursor-pointer"
-    >
-      Create Your Poster
-    </Link>
-  </div>
-</div>
-
-       
+          <div className="absolute z-[10] inset-0 flex flex-col items-center justify-end pb-[10%] text-black">
+            <Link
+              href=""
+              className="md:text-4xl text-xs bg-black text-white px-6 py-2 rounded-2xl cursor-pointer"
+            >
+              Create Your Poster
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* Why Choose Us */}
@@ -230,8 +186,14 @@ export default function Home() {
               width={1024}
               className="md:h-[60px] md:w-[60px] h-[40px] w-[40px]"
             />
-            <h2 className="text-center text-xs md:text-lg font-semibold">Premium Print</h2>
-            <p className="text-center text-[0.6rem] md:text-sm"> Quality is out top priority. Each poster is meticulously crafted using premium materials</p>
+            <h2 className="text-center text-xs md:text-lg font-semibold">
+              Premium Print
+            </h2>
+            <p className="text-center text-[0.6rem] md:text-sm">
+              {" "}
+              Quality is our top priority. Each poster is meticulously crafted
+              using premium materials
+            </p>
           </div>
           <div className="flex items-center justify-center flex-col gap-1 md:gap-2">
             <Image
@@ -241,8 +203,14 @@ export default function Home() {
               width={1024}
               className="md:h-[60px] md:w-[60px] h-[40px] w-[40px]"
             />
-            <h2 className="text-center text-xs md:text-lg font-semibold">Custom Creation</h2>
-            <p className="text-center text-[0.6rem] md:text-sm"> Upload your own images or designs and create personalized poster that rreflect your personality.</p>
+            <h2 className="text-center text-xs md:text-lg font-semibold">
+              Custom Creation
+            </h2>
+            <p className="text-center text-[0.6rem] md:text-sm">
+              {" "}
+              Upload your own images or designs and create personalized poster
+              that reflect your personality.
+            </p>
           </div>
           <div className="flex items-center justify-center flex-col gap-1  md:gap-2">
             <Image
@@ -252,8 +220,14 @@ export default function Home() {
               width={1024}
               className="md:h-[60px] md:w-[60px] h-[40px] w-[40px]"
             />
-            <h2 className="text-center text-xs md:text-lg font-semibold">Free Shippingt</h2>
-            <p className="text-center text-[0.6rem] md:text-sm"> Enjoy free delivery on prepaid orders- no shipping fees means more savings and convenience for you!</p>
+            <h2 className="text-center text-xs md:text-lg font-semibold">
+              Free Shipping
+            </h2>
+            <p className="text-center text-[0.6rem] md:text-sm">
+              {" "}
+              Enjoy free delivery on prepaid orders- no shipping fees means more
+              savings and convenience for you!
+            </p>
           </div>
           <div className="flex items-center justify-center flex-col gap-1 md:gap-2">
             <Image
@@ -263,12 +237,16 @@ export default function Home() {
               width={1024}
               className="md:h-[60px] md:w-[60px] h-[40px] w-[40px]"
             />
-            <h2 className="text-center text-xs md:text-lg font-semibold">Secure Packaging</h2>
-            <p className="text-center text-[0.6rem] md:text-sm"> We ship your posters flat or rolled in rigid, damage-proof packaging—so they arrive crisp, clean, and display-ready.</p>
+            <h2 className="text-center text-xs md:text-lg font-semibold">
+              Secure Packaging
+            </h2>
+            <p className="text-center text-[0.6rem] md:text-sm">
+              {" "}
+              We ship your posters flat or rolled in rigid, damage-proof
+              packaging—so they arrive crisp, clean, and display-ready.
+            </p>
           </div>
-
         </div>
-      
       </section>
     </div>
   );

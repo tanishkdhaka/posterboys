@@ -1,0 +1,19 @@
+ export default interface Products {
+    id:number,
+    name:string,
+    slug:string,
+    category_id:number,
+    type:string,
+    image_url:string,
+    variants:{
+        size:string,
+        original_price:number,
+        discounted_price:number
+    }[],
+    order_count:number,
+    tags:string[],
+    rating:number,
+    review_count:number,
+    created_at:string,
+    updated_at:string,
+}
