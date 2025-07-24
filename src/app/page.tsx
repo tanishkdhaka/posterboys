@@ -146,13 +146,13 @@ export default function Home() {
           />
         </div>
         <div className="flex md:px-5 py-2 relative items-center justify-center">
-          <Image
-            src="/customPoster.png"
-            alt=""
-            height={1080}
-            width={1024}
-            className="w-full md:h-[600px]"
-          />
+  <Image
+    src="/customPoster.png"
+    alt=""
+    height={1080}
+    width={1024}
+    className="w-full md:h-[600px]"
+  />
 
           <div className="absolute z-[10] inset-0 flex flex-col items-center justify-end pb-[10%] text-black">
             <Link
