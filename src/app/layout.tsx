@@ -12,6 +12,7 @@ const geistSans = Inter({
 
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://posterboys.store'),
   title: {
     default: 'PosterBoys | Premium Posters for Every Wall',
     template: '%s | PosterBoys',
