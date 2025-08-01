@@ -11,7 +11,7 @@ export async function GET() {
   // Fetch poster slugs for /poster/[slug]
   const { data: posters = [] } = await supabase.from('posters').select('slug')
 
-  const baseUrl = 'https://posterboys.shop' // replace with your domain if different
+  const baseUrl = 'https://posterboys.store' // replace with your domain if different
 
   const urls = [
     `${baseUrl}/`,
