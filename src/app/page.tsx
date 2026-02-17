@@ -65,7 +65,7 @@ export default function Home() {
           priority
         />
         <div
-          className={`${newRocker.className} absolute z-[10]  inset-0 gap-4  flex flex-col items-center justify-center text-white text-4xl md:text-6xl font-bold`}
+          className={`${newRocker.className} absolute z-10  inset-0 gap-4  flex flex-col items-center justify-center text-white text-4xl md:text-6xl font-bold`}
         >
           <h1>Your Walls,</h1>
           <h1>Best Wingman.</h1>
@@ -86,7 +86,7 @@ export default function Home() {
             alt={""}
             height={1080}
             width={1024}
-            className="md:h-[94px] md:w-[330px] h-[75px] w-[251px]"
+            className="md:h-23.5 md:w-82.5 h-18.75 w-62.75"
           />
         </div>
         <div className="flex md:gap-10 gap-2 overflow-x-scroll scrollbar-none scroll-smooth">
@@ -96,7 +96,7 @@ export default function Home() {
               key={id}
               className="flex flex-col justify-center md:gap-2 gap-1 md:p-4 p-2  rounded-3xl"
             >
-              <div className="relative w-[90px] h-[120px] md:w-[208px] md:h-[260px] rounded-3xl overflow-hidden">
+              <div className="relative w-22.5 h-30 md:w-52 md:h-65 rounded-3xl overflow-hidden">
                 <Image
                   src={cat.image_url}
                   alt={cat.name}

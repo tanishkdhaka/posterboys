@@ -29,11 +29,11 @@ function Footer() {
 
             <section className='flex flex-col gap-3 '>
                 <h3 className='text-sm md:text-xl font-semibold text-[#d34a4a]'>SUBSCRIBE TO OUR EMAIL</h3>
-                <input type="text"  placeholder='posterboys@gmail.com' className='border-white border-1 outline-none focus:outline-none rounded-xl px-4 py-2 text-xs md:text-lg w-full'/>
+                <input type="text"  placeholder='posterboys@gmail.com' className='border-white border outline-none focus:outline-none rounded-xl px-4 py-2 text-xs md:text-lg w-full'/>
             </section>
            </div>
         <div className='bg-[#df4242]  flex flex-col items-center justify-center gap-2 p-2 '>
-            <p className='max-w-screen-lg text-center text-[0.5rem] md:text-sm text-white'>All artwork posted on this website is intended as fan art and is not purported to be official merchandise unless indicated otherwise. If you have any issues regarding the artwork, please write to us at support@posterboys.store</p>
+            <p className='max-w-5xl text-center text-[0.5rem] md:text-sm text-white'>All artwork posted on this website is intended as fan art and is not purported to be official merchandise unless indicated otherwise. If you have any issues regarding the artwork, please write to us at support@posterboys.store</p>
            <p className='text-center text-[0.5rem] md:text-sm text-white'>© 2025 POSTER BOYS</p>
         </div>
         </footer>

@@ -3,6 +3,10 @@ import React, { useState, useEffect } from "react";
 import { Monoton } from "next/font/google";
 import Link from "next/link";
 import { Menu, Search, ShoppingCart, UserRoundPen, X } from "lucide-react";
+import {useCartStore} from "../store/navbarStore"
+
+
+
 
 const monoton = Monoton({
   subsets: ["latin"],
@@ -11,14 +15,19 @@ const monoton = Monoton({
 
 function Navbar() {
   const [open, setOpen] = useState(false);
+  const totalItems = useCartStore((state) => state.totalItems())
+  const [mounted, setMounted] = useState(false)
 
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   // Optional: lock scroll when menu is open
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", open);
   }, [open]);
 
   return (
-    <nav className="w-full bg-white sticky top-0 z-[99999] text-black">
+    <nav className="w-full bg-white sticky top-0 z-99999 text-black">
       {/* Main bar */}
       <div className="flex items-center justify-between md:p-3 md:px-8 p-2 bg-white shadow-md">
         <Link href="/" className={`${monoton.className} text-[#338ED1] md:text-2xl`}>
@@ -38,7 +47,7 @@ function Navbar() {
         <div className="flex items-center gap-3 md:gap-6">
           <button><Search className="h-5 md:h-6" /></button>
           <Link href="/" className="hidden md:flex"><UserRoundPen className="h-5 md:h-6" /></Link>
-          <Link href="/" className=""><ShoppingCart className="h-5 md:h-6" /></Link>
+          <Link href="/cart" className="flex relative"><ShoppingCart className="h-5 md:h-6 " />{mounted&& <span className="absolute -top-1 border-2 border-black bg-black text-white h-4 w-4 flex items-center justify-center rounded-full -right-2 ">{totalItems}</span>}</Link>
           <button onClick={() => setOpen(true)} className="md:hidden">
             <Menu className="h-5 md:h-6" />
           </button>
@@ -47,7 +56,7 @@ function Navbar() {
 
       {/* Full-screen mobile menu */}
       <div
-  className={`fixed inset-0 z-[999999] bg-black text-white p-6 flex flex-col justify-between transform transition-transform duration-400 ease-in-out ${
+  className={`fixed inset-0 z-999999 bg-black text-white p-6 flex flex-col justify-between transform transition-transform duration-400 ease-in-out ${
     open ? "translate-y-0" : "-translate-y-full"
   }`}
 >

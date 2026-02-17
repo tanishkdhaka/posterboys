@@ -4,12 +4,15 @@ import SizeDropdown from "@/components/dropdown";
 import Category from "@/data/category";
 import Products from "@/data/Products";
 import { supabase } from "@/lib/supabaseClient";
+import { useCartStore } from "@/store/navbarStore";
 import { Rating } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+
+
 interface Poster extends Products {
   category: {
     name: string;
@@ -18,12 +21,16 @@ interface Poster extends Products {
 }
 
 function PosterClientSide({ slug }: { slug: string }) {
+
   const [poster, setPoster] = useState<Poster>();
   const [relatedPosters, setRelatedPosters] = useState<Products[]>([]);
   const [iconSize, setIconSize] = useState<"medium" | "large">("medium");
   const [ratingGap, setRatingGap] = useState("6px");
   const [variantIndex, setVairant] = useState(0);
   const [Quantity, setQuantity] = useState(1);
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, number>>({})
+
+
   useEffect(() => {
     const handleResize = () => {
       setIconSize(window.innerWidth < 768 ? "medium" : "large");
@@ -70,7 +77,12 @@ function PosterClientSide({ slug }: { slug: string }) {
     };
     fetchData();
   }, [slug]);
+  const addItem = useCartStore((state) => state.addItem)
+  const items = useCartStore((state) => state.items)
 
+  useEffect(() => {
+    console.log("Cart changed:", items)
+  }, [items])
   if (!poster) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -95,7 +107,7 @@ function PosterClientSide({ slug }: { slug: string }) {
         </div>
         {/* Hero Section */}
 
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-4  p-4 max-w-screen-xl mx-auto ">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4  p-4 max-w-7xl mx-auto ">
           {/* product image */}
           <div className="flex items-end justify-center">
             <Image
@@ -145,9 +157,9 @@ function PosterClientSide({ slug }: { slug: string }) {
               <span className="font-semibold gap-3 flex md:text-lg text-md items-center">
                 <span className="line-through opacity-40">
                   {" "}
-                  ₹{poster.variants[variantIndex].discounted_price}{" "}
+                  ₹{poster.variants[variantIndex].original_price}{" "}
                 </span>{" "}
-                ₹{poster.variants[variantIndex].original_price}
+                ₹{poster.variants[variantIndex].discounted_price}
                 <div className="bg-[#E68C8C] text-xs text-white rounded-sm md:text-sm flex items-center justify-center px-2  ">
                   {poster.variants[variantIndex].original_price
                     ? Math.round(
@@ -176,7 +188,7 @@ function PosterClientSide({ slug }: { slug: string }) {
                   <button
                     onClick={() => setVairant(index)}
                     key={index}
-                    className={`border-1 px-2 py-1 rounded-lg  border-gray-400 cursor-pointer
+                    className={`border px-2 py-1 rounded-lg  border-gray-400 cursor-pointer
         ${variantIndex === index ? "bg-white " : "b"}
       `}
                   >
@@ -198,7 +210,7 @@ function PosterClientSide({ slug }: { slug: string }) {
                   </button>
                   <span className="px-2">{Quantity}</span>
                   <button
-                    className="cursor-pointer border-1  px-3 py-1 bg-white rounded-lg"
+                    className="cursor-pointer border  px-3 py-1 bg-white rounded-lg"
                     onClick={() => setQuantity(Quantity + 1)}
                   >
                     <Plus className="w-4" />
@@ -206,11 +218,11 @@ function PosterClientSide({ slug }: { slug: string }) {
                 </div>
               </div>
 
-              <button className="bg-[#338ED1] z-[9999] fixed bottom-0 left-0 tracking-wider md:relative flex items-center justify-center w-full text-white px-4 py-3.5 md:py-1 uppercase md:rounded-lg cursor-pointer text-2xl md:text-xl lg:text-2xl font-semibold md:mt-0 mt-2">
+              <button onClick={() => addItem(poster.id,poster.variants[variantIndex].size,Quantity)}className="bg-[#338ED1] z-9999 fixed bottom-0 left-0 tracking-wider md:relative flex items-center justify-center w-full text-white px-4 py-3.5 md:py-1 uppercase md:rounded-lg cursor-pointer text-2xl md:text-xl lg:text-2xl font-semibold md:mt-0 mt-2">
                 Add to Bag
               </button>
             </div>
-            <div className="flex flex-col gap-3 mt-6  bg-white rounded-2xl border-1 py-6 px-8 ">
+            <div className="flex flex-col gap-3 mt-6  bg-white rounded-2xl border py-6 px-8 ">
               <h3 className="font-semibold ">Need Custom Poster?</h3>
               <span className="text-sm bg-[#E7F0FE] p-4 rounded-2xl tracking-wide w-fit">
                 Upload Your Own Image Here
@@ -254,7 +266,9 @@ function PosterClientSide({ slug }: { slug: string }) {
           </h1>
           <div className="grid  md:grid-cols-3 lg:grid-cols-4 grid-cols-2">
             {" "}
-            {relatedPosters.map((item, id) => (
+            {relatedPosters.map((item, id) => {
+              const selectedIndex = selectedVariants[item.id]??0
+              return(
               <div
                 key={id}
                 className="flex flex-col items-center justify-between md:p-4 p-2 gap-2  mb-2"
@@ -284,13 +298,18 @@ function PosterClientSide({ slug }: { slug: string }) {
                       size: v.size,
                       price: v.discounted_price,
                     }))}
+                    selectedIndex={selectedIndex}
+                    onChange={(index)=>setSelectedVariants((prev)=>({
+                      ...prev,
+                      [item.id]:index
+                    }))}
                   />
-                  <button className="w-full bg-black text-white px-4 py-1 md:py-2 md:text-md text-xs  rounded-lg cursor-pointer">
+                  <button onClick={()=>addItem(item.id, item.variants[selectedIndex].size, 1)} className="w-full bg-black text-white px-4 py-1 md:py-2 md:text-md text-xs  rounded-lg cursor-pointer">
                     Add to cart
                   </button>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         </section>
 

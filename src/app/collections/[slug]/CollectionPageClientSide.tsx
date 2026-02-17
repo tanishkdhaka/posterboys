@@ -2,13 +2,17 @@
 import SizeDropdown from "@/components/dropdown";
 import Products from "@/data/Products";
 import { supabase } from "@/lib/supabaseClient";
+import { useCartStore } from "@/store/navbarStore";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 function CollectionPageClientSide({ slug }: { slug: string }) {
   // This component is meant to be used on the client side
   const [posters, setPosters] = React.useState<Products[]>([]);
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, number>>({})
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +44,7 @@ function CollectionPageClientSide({ slug }: { slug: string }) {
     };
     fetchData();
   }, [slug]);
+    const addItem = useCartStore((state) => state.addItem)
   if(!posters.length) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -85,7 +90,9 @@ function CollectionPageClientSide({ slug }: { slug: string }) {
       </div>
       {/* products */}
       <div className="grid md:grid-cols-3 lg:grid-cols-4 grid-cols-2 max-w-screen-xl md:mx-auto md:gap-4 gap-2 md:p-4 p-2">
-      {posters.map((item,id)=>(
+      {posters.map((item,id)=>{
+        const selectedIndex = selectedVariants[item.id]??0
+        return(
        
        <div  key={id} className="flex flex-col items-center justify-between md:p-4 p-2 gap-2  mb-2">
            <Link href={`/poster/${item.slug}`} className="flex flex-col items-center justify-between md:p-4 p-2 gap-2  mb-2">
@@ -103,15 +110,23 @@ function CollectionPageClientSide({ slug }: { slug: string }) {
          </Link>
       <div className='flex flex-col gap-2 w-full'>
       <h3 className="font-semibold md:text-lg mx-auto text-xs px-3">From Rs.{item.variants[0].discounted_price}</h3>
-      <SizeDropdown options={item.variants.map((v: { size: string; discounted_price: number; })=>({
+      <SizeDropdown 
+      options={item.variants.map((v: { size: string; discounted_price: number; })=>({
+
          size: v.size,
          price: v.discounted_price
-        }))} />
-        <button className='w-full bg-black text-white px-4 py-1 md:py-2 md:text-md text-xs  rounded-lg cursor-pointer'>Add to cart</button>
+        }))} 
+        selectedIndex={selectedIndex}
+        onChange={(index)=>setSelectedVariants((prev)=>({
+          ...prev,
+          [item.id]:index
+        }))}
+        />
+        <button onClick={()=>addItem(item.id, item.variants[selectedIndex].size, 1)} className='w-full bg-black text-white px-4 py-1 md:py-2 md:text-md text-xs  rounded-lg cursor-pointer'>Add to cart</button>
       
       </div>
        </div>
-     ))}
+)})}
       </div>
     </div>
   );
