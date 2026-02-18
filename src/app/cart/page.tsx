@@ -34,7 +34,7 @@ function Page() {
     }
   }, [items]);
   
-  console.log(cartProducts)
+
   const newPords = items
   .map((cartItem) => {
     const product = cartProducts.find((p) => p.id === cartItem.id);
@@ -71,11 +71,24 @@ function Page() {
   
   const tax = Math.round((total*18)/100)
 
- 
+ if(items.length===0){
+    return(
+        <div className="min-h-[70vh] bg-white">
+              <div className=" flex bg-gray-100 w-full ">
+        <h1 className="flex m-2 mx-auto text-fuchsia-600 text-sm font-semibold tracking-widegi">Holi Speacial BUY 3 GET 3 FREE!!!</h1>
+      </div>
+         <div className="bg-white gap-2 flex items-center justify-center flex-col min-h-[50vh]">
+         <h1 className="text-2xl tracking-wide">Your Bag is Empty</h1>
+         <p className="text-md">When you add products, they&apos;ll appear here.</p>
+         <Link href={"/"} className="mt-6 bg-black text-white text-2xl px-14 py-3 rounded-3xl min-w-[30vh] flex items-center justify-center">Shop Now</Link>
+         </div>
+        </div>
+    )
+ }
   return (
     <div className="min-h-screen w-screen  bg-white flex flex-col ">
       <div className=" flex bg-gray-100 w-full ">
-        <h1 className="flex m-2 mx-auto text-fuchsia-600 text-sm font-semibold tracking-wide">Holi Speacial BUY 3 GET 3 FREE!!!</h1>
+        <h1 className="flex m-2 mx-auto text-fuchsia-600 text-sm font-semibold tracking-widegi">Holi Speacial BUY 3 GET 3 FREE!!!</h1>
       </div>
       {/* flashcards to be added later */}
 
@@ -147,11 +160,11 @@ function Page() {
             </div>
             <div className="flex justify-between w-full">
               <div className="">Shipping</div>
-              <div>Rs.100</div>
+              <div>Rs.{items.length===0? 0:100}</div>
             </div>
             <div className="flex justify-between w-full">
               <div className="">Dicount</div>
-              <div className="text-green-600">Rs.{100}</div>
+              <div className="text-green-600">Rs.{items.length===0? 0:100}</div>
             </div>
           </section>
           <div className="h-0.5 bg-gray-300 my-6 " />
