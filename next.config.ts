@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images:{
-    domains:['ukoipsafpezmcxmxypic.supabase.co']
+    domains:['ukoipsafpezmcxmxypic.supabase.co','lh3.googleusercontent.com']
   },
 
 };

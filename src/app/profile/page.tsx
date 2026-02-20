@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabaseServerClient";
-import CheckOutClient from "./CheckOutClient";
+import ProfileClientPage from "./ProfileClientPage";
+
 
 
 export default async function CheckoutPage() {
@@ -12,5 +13,5 @@ export default async function CheckoutPage() {
     redirect("/");
   }
 
-  return <CheckOutClient user={user} />;
+  return <ProfileClientPage user={user} />;
 }

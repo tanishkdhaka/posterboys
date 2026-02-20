@@ -2,6 +2,7 @@
 import Products from "@/data/Products";
 import { supabase } from "@/lib/supabaseClient";
 import { useCartStore } from "@/store/navbarStore";
+import { User } from "@supabase/supabase-js";
 
 import {  Minus, Plus, Trash } from "lucide-react";
 import Image from "next/image";
@@ -13,6 +14,22 @@ function Page() {
 
   const [cartProducts, setCartProducts] = useState<Products[]>([]);
   const items = useCartStore((state) => state.items);
+  const [user,setUser] = useState<User| null>(null)
+  useEffect(()=>{
+const getUser =async()=>{
+  const {data:{user}} = await supabase.auth.getUser();
+  setUser(user)
+}
+getUser();
+ const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  },[])
   useEffect(() => {
     const productIds = items.map((item) => item.id);
   
@@ -70,6 +87,15 @@ function Page() {
   }, 0);
   
   const tax = Math.round((total*18)/100)
+  const singIn = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+
+    if (error) {
+      console.error("Error signing in:", error.message);
+    }
+  };
 
  if(items.length===0){
     return(
@@ -173,7 +199,10 @@ function Page() {
             <div className="font-semibold">Rs.{total+tax}</div>
           </div>
 
+        {user ? 
           <Link href="checkout" className="flex items-center mt-10 justify-center mx-auto bg-black text-white cursor-pointer hover:opacity-85 rounded-3xl py-3 w-full">Proceed to Buy</Link>
+          : 
+           <button onClick={singIn} className="flex items-center mt-10 justify-center mx-auto bg-black text-white cursor-pointer hover:opacity-85 rounded-3xl py-3 w-full">Login to Proceed</button>}
         </div>
       </div>
     </div>

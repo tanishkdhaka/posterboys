@@ -4,6 +4,9 @@ import { Monoton } from "next/font/google";
 import Link from "next/link";
 import { Menu, Search, ShoppingCart, UserRoundPen, X } from "lucide-react";
 import {useCartStore} from "../store/navbarStore"
+import { User } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabaseClient";
+import Image from "next/image";
 
 
 
@@ -17,7 +20,29 @@ function Navbar() {
   const [open, setOpen] = useState(false);
   const totalItems = useCartStore((state) => state.totalItems())
   const [mounted, setMounted] = useState(false)
+  const [user, setUser] = useState<User | null>(null);
 
+  useEffect(() => {
+    // Get initial session
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+
+    getUser();
+
+    // Listen for changes (login/logout)
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+ 
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -25,7 +50,11 @@ function Navbar() {
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", open);
   }, [open]);
-
+  async  function  signIn() {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+  }
   return (
     <nav className="w-full bg-white sticky top-0 z-99999 text-black">
       {/* Main bar */}
@@ -41,13 +70,30 @@ function Navbar() {
           <Link href="/about" className="text-sm font-semibold">Custom Poster</Link>
           <Link href="/about" className="text-sm font-semibold">More</Link>
           <Link href="/about" className="text-sm font-semibold">Review</Link>
+         
         </div>
 
         {/* Icons */}
         <div className="flex items-center gap-3 md:gap-6">
           <button><Search className="h-5 md:h-6" /></button>
-          <Link href="/" className="hidden md:flex"><UserRoundPen className="h-5 md:h-6" /></Link>
+      
           <Link href="/cart" className="flex relative"><ShoppingCart className="h-5 md:h-6 " />{mounted&& <span className="absolute -top-1 border-2 border-black bg-black text-white h-4 w-4 flex items-center justify-center rounded-full -right-2 ">{totalItems}</span>}</Link>
+          {user ? 
+       <Link href="/profile" className="flex items-center gap-1">
+        {user.user_metadata?.avatar_url ? (
+          <Image
+            src={user.user_metadata.avatar_url}
+            alt="User Avatar"
+            className="h-5 md:h-6 rounded-full"
+            height={25} width={25}
+          />
+        ) : (
+          <UserRoundPen className="h-5 md:h-6" />
+        )}
+       </Link> 
+       : 
+       <button onClick={signIn} className="flex items-center gap-1 cursor-pointer"><UserRoundPen className="h-5 md:h-6" /></button>
+       }
           <button onClick={() => setOpen(true)} className="md:hidden">
             <Menu className="h-5 md:h-6" />
           </button>
@@ -78,7 +124,7 @@ function Navbar() {
           <Link href="/about" onClick={() => setOpen(false)}>Custom Poster</Link>
           <Link href="/about" onClick={() => setOpen(false)}>More</Link>
           <Link href="/about" onClick={() => setOpen(false)}>Review</Link>
-          <Link href="/about" onClick={() => setOpen(false)}>Orders</Link>
+          
           <Link href="/about" onClick={() => setOpen(false)}>Profile</Link>
         </div>
 

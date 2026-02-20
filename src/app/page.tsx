@@ -45,6 +45,7 @@ export default function Home() {
     }
     fetchData();
   }, []);
+  
   if(loading) {
     return (
       <div className="flex items-center justify-center h-screen">
