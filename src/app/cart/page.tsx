@@ -136,7 +136,7 @@ getUser();
                    <div>
                     <h2 className="font-semibold md:text-lg text-sm">{item?.name||"N?A"}</h2>
                     <p className="text-sm opacity-70"> size: {item?.selectedVariant?.size||"N?A"}</p>
-                        <p className="text-sm  flex md:hidden font-semibold">Price: {item?.selectedVariant?.discounted_price||"N?A"}</p>
+                        <p className="text-sm  flex md:hidden font-semibold">Price: {item?.selectedVariant?.discounted_price * item.selectedVariant.quantity||"N?A"}</p>
                     <div className="absolute gap-4 flex   bottom-4">
                         <button onClick={()=>{
                             if (item.selectedVariant.quantity > 1) {
@@ -163,7 +163,7 @@ getUser();
 
                 </div>
                 <div className="hidden md:flex gap-4 p-4 font-bold">
-                    Rs.{item?.selectedVariant?.discounted_price}
+                    Rs.{item?.selectedVariant?.discounted_price * item?.selectedVariant?.quantity}
                 </div>
             
                 

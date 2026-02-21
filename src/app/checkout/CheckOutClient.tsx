@@ -5,6 +5,9 @@ import { useCartStore } from '@/store/navbarStore';
 import { User } from '@supabase/supabase-js';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
+import { createCodOrder } from './action';
+import { useRouter } from 'next/navigation';
+
 
 function CheckOutClient({user}:{user:User}) {
  
@@ -19,6 +22,7 @@ function CheckOutClient({user}:{user:User}) {
     const[phone,setPhone]=useState("")
     const[cartProducts,setCartProducts]= useState<Products[]>([])
     const items = useCartStore((state)=>state.items)
+    const router = useRouter();
   
     useEffect(() => {
        const productIds = items.map((item) => item.id);
@@ -70,6 +74,62 @@ function CheckOutClient({user}:{user:User}) {
     }, 0);
     
     const tax = Math.round((total*18)/100)
+
+//create order
+const [isSubmitting, setIsSubmitting] = useState(false);
+const createOrder = async (paymentMethod:string)=>{
+  try{
+    if(isSubmitting) return;
+  if(!name || !email || !street || !city || !state || !zipCode || !phone){
+    alert("Please fill all the required fields")
+    return;
+  }
+  if(phone.length<10){
+    alert("Please enter a valid phone number")
+    return;
+  }
+  if(zipCode.length<6){
+    alert("Please enter a valid zip code")
+    return;
+  }
+  if(paymentMethod ==="cod"){
+    
+    const orderId=  await createCodOrder(items, {
+        full_name: name,
+        email,
+        phone,
+        street,
+        city,
+        state,
+        zip_code: zipCode,
+        landmark,
+      });
+     
+   
+
+    setName("");
+    setEmail("");
+    setStreet("");
+    setCity("");
+    setState("");
+    setZipCode("");
+    setPhone("");
+    useCartStore.getState().clearCart();
+    router.push(`/order-confirmation/${orderId}`)
+
+
+
+  }
+  }
+  catch(err){
+    console.error("Error creating order",err);
+    alert("There was an error processing your order. Please try again.")
+  }
+  finally{
+    setIsSubmitting(false);
+  }
+}
+
     return (
       <div className="bg-[#E7F0FE] min-h-screen">
         <div className="grid grid-cols-1 md:grid-cols-6 md:gap-10 p-4 max-w-5xl mx-auto pt-10">
@@ -337,7 +397,7 @@ function CheckOutClient({user}:{user:User}) {
               <div className="font-semibold">Rs.{total+tax}</div>
             </div>
   
-            <button  className="flex items-center mt-10 justify-center mx-auto bg-black text-white cursor-pointer hover:opacity-85 rounded-3xl py-3 w-full">Proceed to Checkout</button>
+            <button disabled={isSubmitting} onClick={()=>createOrder(paymentMethod)} className="flex items-center mt-10 justify-center mx-auto bg-black text-white cursor-pointer hover:opacity-85 rounded-3xl py-3 w-full">Proceed to Checkout</button>
           </div>
   
           </div>

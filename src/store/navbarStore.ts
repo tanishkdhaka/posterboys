@@ -2,18 +2,19 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
-type CartItem = {
-  id: number,
+ export type CartItem = {
+  id: string,
   size:string,
   quantity: number
 }
 
 type CartState = {
   items: CartItem[]
-  addItem: (id: number, size:string, quantity:number) => void
-  removeItem: (id: number,size:string) => void
+  addItem: (id: string, size:string, quantity:number) => void
+  removeItem: (id: string,size:string) => void
   totalItems: () => number
-  reduceQuantity:(id:number,size:string)=>void
+  reduceQuantity:(id:string,size:string)=>void
+  clearCart: () => void
 }
 
 export const useCartStore = create<CartState>()(
@@ -39,7 +40,7 @@ export const useCartStore = create<CartState>()(
               items: [...state.items, { id,size, quantity: quantity }],
             }
           }),
-          reduceQuantity: (id: number, size: string) =>
+          reduceQuantity: (id: string, size: string) =>
             set((state: CartState) => {
                 const existing = state.items.find((item) => item.id === id && item.size === size);
                 if (existing) {
@@ -60,7 +61,9 @@ export const useCartStore = create<CartState>()(
             
               totalItems: () =>
                 get().items.reduce((acc, item) => acc + item.quantity, 0),
+              clearCart: () => set({ items: [] }),
       }),
+    
       {
         name: "cart-storage", // key in localStorage
       }

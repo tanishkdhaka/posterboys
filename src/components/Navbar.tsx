@@ -84,7 +84,7 @@ function Navbar() {
           <Image
             src={user.user_metadata.avatar_url}
             alt="User Avatar"
-            className="h-5 md:h-6 rounded-full"
+            className="h-5 w-5 md:w-6 md:h-6 rounded-full"
             height={25} width={25}
           />
         ) : (
@@ -125,7 +125,7 @@ function Navbar() {
           <Link href="/about" onClick={() => setOpen(false)}>More</Link>
           <Link href="/about" onClick={() => setOpen(false)}>Review</Link>
           
-          <Link href="/about" onClick={() => setOpen(false)}>Profile</Link>
+          <Link href="/profile" onClick={() => setOpen(false)}>Profile</Link>
         </div>
 
         {/* Bottom icons */}
