@@ -74,9 +74,9 @@ function Page() {
                 <div className="flex justify-between mt-6 border-t pt-4">
                    <div className="flex flex-col">
                    <p>Total</p>
-                   <p className="text-xs text-gray-400">total+tax+shipping</p>
+                   <p className="text-xs text-gray-400">*including tax</p>
                    </div>
-                    <p className=" font-semibold">Rs. {total+tax||"N?A"}</p>
+                    <p className=" font-semibold">Rs. {Math.round(total+tax)||"N?A"}</p>
                  </div>
         </div>
         <div className="flex justify-center">

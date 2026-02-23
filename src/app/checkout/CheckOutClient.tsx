@@ -101,6 +101,13 @@ const createOrder = async (method: string) => {
       toast.error("Please fill all required fields");
       return;
     }
+    const emailRegex =
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!emailRegex.test(email)) {
+  toast.error("Please enter a valid email address");
+  return;
+}
 
     if (phone.length < 10) {
       toast.error("Invalid phone number");
@@ -129,9 +136,7 @@ const createOrder = async (method: string) => {
       return;
     }
 
-    // --------------------------
-    // RAZORPAY FLOW
-    // --------------------------
+ 
 
     const loaded = await loadRazorpayScript();
     if (!loaded) {

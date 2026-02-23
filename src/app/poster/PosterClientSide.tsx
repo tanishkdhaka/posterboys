@@ -1,6 +1,7 @@
 "use client";
 
 import SizeDropdown from "@/components/dropdown";
+import ReviewForm from "@/components/ReviewForm";
 import Category from "@/data/category";
 import Products from "@/data/Products";
 import { supabase } from "@/lib/supabaseClient";
@@ -30,6 +31,7 @@ function PosterClientSide({ slug }: { slug: string }) {
   const [Quantity, setQuantity] = useState(1);
   const [selectedVariants, setSelectedVariants] = useState<Record<string, number>>({})
 
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -149,9 +151,10 @@ function PosterClientSide({ slug }: { slug: string }) {
                   }}
                 />
               </Stack>
-              <button className=" underline text-gray-600 md:text-sm text-xs">
+              <button onClick={()=>setIsOpen(true)} className=" cursor-pointer underline text-gray-600 md:text-sm text-xs">
                 ({poster.review_count}) write a review
               </button>
+              <ReviewForm isOpen={isOpen} onClose={()=>setIsOpen(false)} />
             </div>
             <div className="mb-2">
               <span className="font-semibold gap-3 flex md:text-lg text-md items-center">
