@@ -31,7 +31,7 @@ function Page() {
         return acc + (item.unit_price * item.quantity)
     
     },0)
-    
+    const tax = total * 0.18;
   return (
     <div className="flex min-h-screen bg-white  ">
       <div className="flex flex-col bg-gray-100 w-full md:m-8 m-4 rounded-2xl p-4 md:p-10">
@@ -72,8 +72,11 @@ function Page() {
                 </div>
                 ))}
                 <div className="flex justify-between mt-6 border-t pt-4">
-                    <p>Total</p>
-                    <p className=" font-semibold">Rs. {total||"N?A"}</p>
+                   <div className="flex flex-col">
+                   <p>Total</p>
+                   <p className="text-xs text-gray-400">total+tax+shipping</p>
+                   </div>
+                    <p className=" font-semibold">Rs. {total+tax||"N?A"}</p>
                  </div>
         </div>
         <div className="flex justify-center">

@@ -7,6 +7,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import { createCodOrder } from './action';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 
 function CheckOutClient({user}:{user:User}) {
@@ -77,24 +78,42 @@ function CheckOutClient({user}:{user:User}) {
 
 //create order
 const [isSubmitting, setIsSubmitting] = useState(false);
-const createOrder = async (paymentMethod:string)=>{
-  try{
-    if(isSubmitting) return;
-  if(!name || !email || !street || !city || !state || !zipCode || !phone){
-    alert("Please fill all the required fields")
-    return;
-  }
-  if(phone.length<10){
-    alert("Please enter a valid phone number")
-    return;
-  }
-  if(zipCode.length<6){
-    alert("Please enter a valid zip code")
-    return;
-  }
-  if(paymentMethod ==="cod"){
-    
-    const orderId=  await createCodOrder(items, {
+async function loadRazorpayScript() {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
+const createOrder = async (method: string) => {
+  if (isSubmitting) return;
+  setIsSubmitting(true);
+
+  try {
+    if (items.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
+    if (!name || !email || !street || !city || !state || !zipCode || !phone) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    if (phone.length < 10) {
+      toast.error("Invalid phone number");
+      return;
+    }
+
+    if (zipCode.length < 6) {
+      toast.error("Invalid zip code");
+      return;
+    }
+
+    if (method === "cod") {
+      const orderId = await createCodOrder(items, {
         full_name: name,
         email,
         phone,
@@ -104,31 +123,82 @@ const createOrder = async (paymentMethod:string)=>{
         zip_code: zipCode,
         landmark,
       });
-     
-   
 
-    setName("");
-    setEmail("");
-    setStreet("");
-    setCity("");
-    setState("");
-    setZipCode("");
-    setPhone("");
-    useCartStore.getState().clearCart();
-    router.push(`/order-confirmation/${orderId}`)
+      useCartStore.getState().clearCart();
+      router.push(`/order-confirmation/${orderId}`);
+      return;
+    }
 
+    // --------------------------
+    // RAZORPAY FLOW
+    // --------------------------
 
+    const loaded = await loadRazorpayScript();
+    if (!loaded) {
+      toast.error("Failed to load Razorpay");
+      return;
+    }
 
-  }
-  }
-  catch(err){
-    console.error("Error creating order",err);
-    alert("There was an error processing your order. Please try again.")
-  }
-  finally{
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const response = await fetch("/api/razorpay-order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+      body: JSON.stringify({
+        items,
+        address: {
+          full_name: name,
+          email,
+          phone,
+          street,
+          city,
+          state,
+          zip_code: zipCode,
+          landmark,
+        },
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      toast.error(data.error || "Failed to create payment");
+      return;
+    }
+
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
+      amount: data.amount,
+      currency: data.currency,
+      name: "Poster Store",
+      description: "Order Payment",
+      order_id: data.razorpayOrderId,
+      handler: function () {
+        useCartStore.getState().clearCart();
+        router.push(`/order-confirmation/${data.internalOrderId}`);
+      },
+      prefill: {
+        name,
+        email,
+        contact: phone,
+      },
+    };
+
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
+  } catch (err) {
+    console.error(err);
+    toast.error("Error processing order");
+  } finally {
     setIsSubmitting(false);
   }
-}
+};
+
 
     return (
       <div className="bg-[#E7F0FE] min-h-screen">
@@ -397,7 +467,7 @@ const createOrder = async (paymentMethod:string)=>{
               <div className="font-semibold">Rs.{total+tax}</div>
             </div>
   
-            <button disabled={isSubmitting} onClick={()=>createOrder(paymentMethod)} className="flex items-center mt-10 justify-center mx-auto bg-black text-white cursor-pointer hover:opacity-85 rounded-3xl py-3 w-full">Proceed to Checkout</button>
+            <button disabled={isSubmitting} onClick={()=>createOrder(paymentMethod)} className="flex items-center mt-10 justify-center mx-auto bg-black text-white cursor-pointer hover:opacity-85 rounded-3xl py-3 w-full">{isSubmitting? <p>Loading..</p>:<div className=''>Proceed to Checkout</div>}</button>
           </div>
   
           </div>

@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import Footer from "@/components/Footer";
+import { Toaster } from "sonner";
 
 const geistSans = Inter({
   variable: "--font-geist-sans",
@@ -61,9 +62,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable}  antialiased `}
       >
+    
          <div className='md:text-xs text-[0.6rem] p-0.5 w-full flex items-center text-white justify-center bg-gradient-to-r from-[#338ED1] to-[#F933A5] gap-1 font-medium'>⚡Express & <span className='font-extrabold'> FREE </span> Shipping on <span className='font-bold'> Prepaid Order</span> <Link href={"/"} className=' underline md:pl-1'> Shop Now </Link></div>
         <Navbar/>
         {children}
+        <Toaster position="top-center" richColors />
         <Footer/>
       </body>
 

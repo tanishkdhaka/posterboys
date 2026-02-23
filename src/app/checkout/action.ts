@@ -97,6 +97,9 @@ export async function createCodOrder(
   if (orderError || !order) {
     throw new Error("Failed to create order");
   }
+  if (cartItems.length === 0) {
+    throw new Error("Cart is empty");
+  }
 
   // 5️⃣ Insert order items
   const orderItems = newPords.map((product) => ({
