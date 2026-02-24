@@ -10,7 +10,7 @@ export default interface Order {
     discount:number,
     total:number,
     razorpay_payment_id:string | null,
-   created_at:string,
+   created_at:Date,
 
-    updated_at:string,
+    updated_at:Date,
 }
